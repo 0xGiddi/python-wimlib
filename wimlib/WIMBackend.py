@@ -29,7 +29,7 @@ class WIMBackend(object):
 
 	@staticmethod
 	def _get_platfom_encoding():
-		is platform.system() == "Windows":
+		if platform.system() == "Windows":
 			return "utf-16-le"
 		return "utf-8"
 
