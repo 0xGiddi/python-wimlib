@@ -6,8 +6,320 @@ import platform
 # All function, unions and structs are as defined in wimlib.h
 # enums are defined only with a max value for silencing cffi warnings.
 # TODO: Replace base64 with proper multiline string, this is only for testing while developing.
-WIMLIB_DEFAULT_CDEFS = 'CnR5cGVkZWYgY2hhciB3aW1saWJfdGNoYXI7CnN0cnVjdCB3aW1saWJfdGltZXNwZWMgewoJaW50\nNjRfdCB0dl9zZWM7CglpbnQzMl90IHR2X25zZWM7Cn07Cgp0eXBlZGVmIHN0cnVjdCBXSU1TdHJ1\nY3QgV0lNU3RydWN0OwoKdW5pb24gd2ltbGliX3Byb2dyZXNzX2luZm8gewoJc3RydWN0IHdpbWxp\nYl9wcm9ncmVzc19pbmZvX3dyaXRlX3N0cmVhbXMgewoJCXVpbnQ2NF90IHRvdGFsX2J5dGVzOwoJ\nCXVpbnQ2NF90IHRvdGFsX3N0cmVhbXM7CgkJdWludDY0X3QgY29tcGxldGVkX2J5dGVzOwoJCXVp\nbnQ2NF90IGNvbXBsZXRlZF9zdHJlYW1zOwoJCXVpbnQzMl90IG51bV90aHJlYWRzOwoJCWludDMy\nX3QgY29tcHJlc3Npb25fdHlwZTsKCQl1aW50MzJfdCB0b3RhbF9wYXJ0czsKCQl1aW50MzJfdCBj\nb21wbGV0ZWRfcGFydHM7Cgl9IHdyaXRlX3N0cmVhbXM7CglzdHJ1Y3Qgd2ltbGliX3Byb2dyZXNz\nX2luZm9fc2NhbiB7CgkJY29uc3Qgd2ltbGliX3RjaGFyICpzb3VyY2U7CgkJY29uc3Qgd2ltbGli\nX3RjaGFyICpjdXJfcGF0aDsKCQllbnVtIHsKCQkJV0lNTElCX1NDQU5fREVOVFJZX09LID0gMCwK\nCQkJV0lNTElCX1NDQU5fREVOVFJZX0VYQ0xVREVEID0gMSwKCQkJV0lNTElCX1NDQU5fREVOVFJZ\nX1VOU1VQUE9SVEVEID0gMiwKCQkJV0lNTElCX1NDQU5fREVOVFJZX0ZJWEVEX1NZTUxJTksgPSAz\nLAoJCQlXSU1MSUJfU0NBTl9ERU5UUllfTk9UX0ZJWEVEX1NZTUxJTksgPSA0LAoJCX0gc3RhdHVz\nOwoJCXVuaW9uIHsKCQkJY29uc3Qgd2ltbGliX3RjaGFyICp3aW1fdGFyZ2V0X3BhdGg7CgkJCWNv\nbnN0IHdpbWxpYl90Y2hhciAqc3ltbGlua190YXJnZXQ7CgkJfTsKCQl1aW50NjRfdCBudW1fZGly\nc19zY2FubmVkOwoJCXVpbnQ2NF90IG51bV9ub25kaXJzX3NjYW5uZWQ7CgkJdWludDY0X3QgbnVt\nX2J5dGVzX3NjYW5uZWQ7Cgl9IHNjYW47CglzdHJ1Y3Qgd2ltbGliX3Byb2dyZXNzX2luZm9fZXh0\ncmFjdCB7CgkJdWludDMyX3QgaW1hZ2U7CgkJdWludDMyX3QgZXh0cmFjdF9mbGFnczsKCQljb25z\ndCB3aW1saWJfdGNoYXIgKndpbWZpbGVfbmFtZTsKCQljb25zdCB3aW1saWJfdGNoYXIgKmltYWdl\nX25hbWU7CgkJY29uc3Qgd2ltbGliX3RjaGFyICp0YXJnZXQ7CgkJY29uc3Qgd2ltbGliX3RjaGFy\nICpyZXNlcnZlZDsKCQl1aW50NjRfdCB0b3RhbF9ieXRlczsKCQl1aW50NjRfdCBjb21wbGV0ZWRf\nYnl0ZXM7CgkJdWludDY0X3QgdG90YWxfc3RyZWFtczsKCQl1aW50NjRfdCBjb21wbGV0ZWRfc3Ry\nZWFtczsKCQl1aW50MzJfdCBwYXJ0X251bWJlcjsKCQl1aW50MzJfdCB0b3RhbF9wYXJ0czsKCQl1\naW50OF90IGd1aWRbMTZdOwoJCXVpbnQ2NF90IGN1cnJlbnRfZmlsZV9jb3VudDsKCQl1aW50NjRf\ndCBlbmRfZmlsZV9jb3VudDsKCX0gZXh0cmFjdDsKCXN0cnVjdCB3aW1saWJfcHJvZ3Jlc3NfaW5m\nb19yZW5hbWUgewoJCWNvbnN0IHdpbWxpYl90Y2hhciAqZnJvbTsKCQljb25zdCB3aW1saWJfdGNo\nYXIgKnRvOwoJfSByZW5hbWU7CglzdHJ1Y3Qgd2ltbGliX3Byb2dyZXNzX2luZm9fdXBkYXRlIHsK\nCQljb25zdCBzdHJ1Y3Qgd2ltbGliX3VwZGF0ZV9jb21tYW5kICpjb21tYW5kOwoJCXNpemVfdCBj\nb21wbGV0ZWRfY29tbWFuZHM7CgkJc2l6ZV90IHRvdGFsX2NvbW1hbmRzOwoJfSB1cGRhdGU7Cglz\ndHJ1Y3Qgd2ltbGliX3Byb2dyZXNzX2luZm9faW50ZWdyaXR5IHsKCQl1aW50NjRfdCB0b3RhbF9i\neXRlczsKCQl1aW50NjRfdCBjb21wbGV0ZWRfYnl0ZXM7CgkJdWludDMyX3QgdG90YWxfY2h1bmtz\nOwoJCXVpbnQzMl90IGNvbXBsZXRlZF9jaHVua3M7CgkJdWludDMyX3QgY2h1bmtfc2l6ZTsKCQlj\nb25zdCB3aW1saWJfdGNoYXIgKmZpbGVuYW1lOwoJfSBpbnRlZ3JpdHk7CglzdHJ1Y3Qgd2ltbGli\nX3Byb2dyZXNzX2luZm9fc3BsaXQgewoJCXVpbnQ2NF90IHRvdGFsX2J5dGVzOwoJCXVpbnQ2NF90\nIGNvbXBsZXRlZF9ieXRlczsKCQl1bnNpZ25lZCBjdXJfcGFydF9udW1iZXI7CgkJdW5zaWduZWQg\ndG90YWxfcGFydHM7CiAgICB3aW1saWJfdGNoYXIgKnBhcnRfbmFtZTsKCX0gc3BsaXQ7CglzdHJ1\nY3Qgd2ltbGliX3Byb2dyZXNzX2luZm9fcmVwbGFjZSB7CgkJY29uc3Qgd2ltbGliX3RjaGFyICpw\nYXRoX2luX3dpbTsKCX0gcmVwbGFjZTsKCXN0cnVjdCB3aW1saWJfcHJvZ3Jlc3NfaW5mb193aW1i\nb290X2V4Y2x1ZGUgewoJCWNvbnN0IHdpbWxpYl90Y2hhciAqcGF0aF9pbl93aW07CgkJY29uc3Qg\nd2ltbGliX3RjaGFyICpleHRyYWN0aW9uX3BhdGg7Cgl9IHdpbWJvb3RfZXhjbHVkZTsKCXN0cnVj\ndCB3aW1saWJfcHJvZ3Jlc3NfaW5mb191bm1vdW50IHsKCQljb25zdCB3aW1saWJfdGNoYXIgKm1v\ndW50cG9pbnQ7CgkJY29uc3Qgd2ltbGliX3RjaGFyICptb3VudGVkX3dpbTsKCQl1aW50MzJfdCBt\nb3VudGVkX2ltYWdlOwoJCXVpbnQzMl90IG1vdW50X2ZsYWdzOwoJCXVpbnQzMl90IHVubW91bnRf\nZmxhZ3M7Cgl9IHVubW91bnQ7CglzdHJ1Y3Qgd2ltbGliX3Byb2dyZXNzX2luZm9fZG9uZV93aXRo\nX2ZpbGUgewoJCWNvbnN0IHdpbWxpYl90Y2hhciAqcGF0aF90b19maWxlOwoJfSBkb25lX3dpdGhf\nZmlsZTsKCXN0cnVjdCB3aW1saWJfcHJvZ3Jlc3NfaW5mb192ZXJpZnlfaW1hZ2UgewoJCWNvbnN0\nIHdpbWxpYl90Y2hhciAqd2ltZmlsZTsKCQl1aW50MzJfdCB0b3RhbF9pbWFnZXM7CgkJdWludDMy\nX3QgY3VycmVudF9pbWFnZTsKCX0gdmVyaWZ5X2ltYWdlOwoJc3RydWN0IHdpbWxpYl9wcm9ncmVz\nc19pbmZvX3ZlcmlmeV9zdHJlYW1zIHsKCQljb25zdCB3aW1saWJfdGNoYXIgKndpbWZpbGU7CgkJ\ndWludDY0X3QgdG90YWxfc3RyZWFtczsKCQl1aW50NjRfdCB0b3RhbF9ieXRlczsKCQl1aW50NjRf\ndCBjb21wbGV0ZWRfc3RyZWFtczsKCQl1aW50NjRfdCBjb21wbGV0ZWRfYnl0ZXM7Cgl9IHZlcmlm\neV9zdHJlYW1zOwoJc3RydWN0IHdpbWxpYl9wcm9ncmVzc19pbmZvX3Rlc3RfZmlsZV9leGNsdXNp\nb24gewoJCWNvbnN0IHdpbWxpYl90Y2hhciAqcGF0aDsKCQlib29sIHdpbGxfZXhjbHVkZTsKCX0g\ndGVzdF9maWxlX2V4Y2x1c2lvbjsKCXN0cnVjdCB3aW1saWJfcHJvZ3Jlc3NfaW5mb19oYW5kbGVf\nZXJyb3IgewoJCWNvbnN0IHdpbWxpYl90Y2hhciAqcGF0aDsKCQlpbnQgZXJyb3JfY29kZTsKCQli\nb29sIHdpbGxfaWdub3JlOwoJfSBoYW5kbGVfZXJyb3I7Cn07CgpzdHJ1Y3Qgd2ltbGliX2NhcHR1\ncmVfc291cmNlIHsKCXdpbWxpYl90Y2hhciAqZnNfc291cmNlX3BhdGg7Cgl3aW1saWJfdGNoYXIg\nKndpbV90YXJnZXRfcGF0aDsKCWxvbmcgcmVzZXJ2ZWQ7Cn07CgpzdHJ1Y3Qgd2ltbGliX3dpbV9p\nbmZvIHsKCXVpbnQ4X3QgZ3VpZFsxNl07Cgl1aW50MzJfdCBpbWFnZV9jb3VudDsKCXVpbnQzMl90\nIGJvb3RfaW5kZXg7Cgl1aW50MzJfdCB3aW1fdmVyc2lvbjsKCXVpbnQzMl90IGNodW5rX3NpemU7\nCgl1aW50MTZfdCBwYXJ0X251bWJlcjsKCXVpbnQxNl90IHRvdGFsX3BhcnRzOwoJaW50MzJfdCBj\nb21wcmVzc2lvbl90eXBlOwoJdWludDY0X3QgdG90YWxfYnl0ZXM7Cgl1aW50MzJfdCBoYXNfaW50\nZWdyaXR5X3RhYmxlIDogMTsKCXVpbnQzMl90IG9wZW5lZF9mcm9tX2ZpbGUgOiAxOwoJdWludDMy\nX3QgaXNfcmVhZG9ubHkgOiAxOwoJdWludDMyX3QgaGFzX3JwZml4IDogMTsKCXVpbnQzMl90IGlz\nX21hcmtlZF9yZWFkb25seSA6IDE7Cgl1aW50MzJfdCBzcGFubmVkIDogMTsKCXVpbnQzMl90IHdy\naXRlX2luX3Byb2dyZXNzIDogMTsKCXVpbnQzMl90IG1ldGFkYXRhX29ubHkgOiAxOwoJdWludDMy\nX3QgcmVzb3VyY2Vfb25seSA6IDE7Cgl1aW50MzJfdCBwaXBhYmxlIDogMTsKCXVpbnQzMl90IHJl\nc2VydmVkX2ZsYWdzIDogMjI7Cgl1aW50MzJfdCByZXNlcnZlZFs5XTsKfTsKCnN0cnVjdCB3aW1s\naWJfcmVzb3VyY2VfZW50cnkgewoJdWludDY0X3QgdW5jb21wcmVzc2VkX3NpemU7Cgl1aW50NjRf\ndCBjb21wcmVzc2VkX3NpemU7Cgl1aW50NjRfdCBvZmZzZXQ7Cgl1aW50OF90IHNoYTFfaGFzaFsy\nMF07Cgl1aW50MzJfdCBwYXJ0X251bWJlcjsKCXVpbnQzMl90IHJlZmVyZW5jZV9jb3VudDsKCXVp\nbnQzMl90IGlzX2NvbXByZXNzZWQgOiAxOwoJdWludDMyX3QgaXNfbWV0YWRhdGEgOiAxOwoJdWlu\ndDMyX3QgaXNfZnJlZSA6IDE7Cgl1aW50MzJfdCBpc19zcGFubmVkIDogMTsKCXVpbnQzMl90IGlz\nX21pc3NpbmcgOiAxOwoJdWludDMyX3QgcGFja2VkIDogMTsKCXVpbnQzMl90IHJlc2VydmVkX2Zs\nYWdzIDogMjY7Cgl1aW50NjRfdCByYXdfcmVzb3VyY2Vfb2Zmc2V0X2luX3dpbTsKCXVpbnQ2NF90\nIHJhd19yZXNvdXJjZV9jb21wcmVzc2VkX3NpemU7Cgl1aW50NjRfdCByYXdfcmVzb3VyY2VfdW5j\nb21wcmVzc2VkX3NpemU7Cgl1aW50NjRfdCByZXNlcnZlZFsxXTsKfTsKCnN0cnVjdCB3aW1saWJf\nc3RyZWFtX2VudHJ5IHsKCWNvbnN0IHdpbWxpYl90Y2hhciAqc3RyZWFtX25hbWU7CglzdHJ1Y3Qg\nd2ltbGliX3Jlc291cmNlX2VudHJ5IHJlc291cmNlOwoJdWludDY0X3QgcmVzZXJ2ZWRbNF07Cn07\nCgpzdHJ1Y3Qgd2ltbGliX29iamVjdF9pZCB7Cgl1aW50OF90IG9iamVjdF9pZFsxNl07Cgl1aW50\nOF90IGJpcnRoX3ZvbHVtZV9pZFsxNl07Cgl1aW50OF90IGJpcnRoX29iamVjdF9pZFsxNl07Cgl1\naW50OF90IGRvbWFpbl9pZFsxNl07Cn07CgpzdHJ1Y3Qgd2ltbGliX2Rpcl9lbnRyeSB7Cgljb25z\ndCB3aW1saWJfdGNoYXIgKmZpbGVuYW1lOwoJY29uc3Qgd2ltbGliX3RjaGFyICpkb3NfbmFtZTsK\nCWNvbnN0IHdpbWxpYl90Y2hhciAqZnVsbF9wYXRoOwoJc2l6ZV90IGRlcHRoOwoJY29uc3QgY2hh\nciAqc2VjdXJpdHlfZGVzY3JpcHRvcjsKCXNpemVfdCBzZWN1cml0eV9kZXNjcmlwdG9yX3NpemU7\nCgl1aW50MzJfdCBhdHRyaWJ1dGVzOwoJdWludDMyX3QgcmVwYXJzZV90YWc7Cgl1aW50MzJfdCBu\ndW1fbGlua3M7Cgl1aW50MzJfdCBudW1fbmFtZWRfc3RyZWFtczsKCXVpbnQ2NF90IGhhcmRfbGlu\na19ncm91cF9pZDsKCXN0cnVjdCB3aW1saWJfdGltZXNwZWMgY3JlYXRpb25fdGltZTsKCXN0cnVj\ndCB3aW1saWJfdGltZXNwZWMgbGFzdF93cml0ZV90aW1lOwoJc3RydWN0IHdpbWxpYl90aW1lc3Bl\nYyBsYXN0X2FjY2Vzc190aW1lOwoJdWludDMyX3QgdW5peF91aWQ7Cgl1aW50MzJfdCB1bml4X2dp\nZDsKCXVpbnQzMl90IHVuaXhfbW9kZTsKCXVpbnQzMl90IHVuaXhfcmRldjsKCXN0cnVjdCB3aW1s\naWJfb2JqZWN0X2lkIG9iamVjdF9pZDsKCWludDMyX3QgY3JlYXRpb25fdGltZV9oaWdoOwoJaW50\nMzJfdCBsYXN0X3dyaXRlX3RpbWVfaGlnaDsKCWludDMyX3QgbGFzdF9hY2Nlc3NfdGltZV9oaWdo\nOwoJaW50MzJfdCByZXNlcnZlZDI7Cgl1aW50NjRfdCByZXNlcnZlZFs0XTsKCXN0cnVjdCB3aW1s\naWJfc3RyZWFtX2VudHJ5IHN0cmVhbXNbXTsKfTsKCnN0cnVjdCB3aW1saWJfYWRkX2NvbW1hbmQg\newoJd2ltbGliX3RjaGFyICpmc19zb3VyY2VfcGF0aDsKCXdpbWxpYl90Y2hhciAqd2ltX3Rhcmdl\ndF9wYXRoOwoJd2ltbGliX3RjaGFyICpjb25maWdfZmlsZTsKCWludCBhZGRfZmxhZ3M7Cn07Cgpz\ndHJ1Y3Qgd2ltbGliX2RlbGV0ZV9jb21tYW5kIHsKCXdpbWxpYl90Y2hhciAqd2ltX3BhdGg7Cglp\nbnQgZGVsZXRlX2ZsYWdzOwp9OwoKc3RydWN0IHdpbWxpYl9yZW5hbWVfY29tbWFuZCB7Cgl3aW1s\naWJfdGNoYXIgKndpbV9zb3VyY2VfcGF0aDsKCXdpbWxpYl90Y2hhciAqd2ltX3RhcmdldF9wYXRo\nOwoJaW50IHJlbmFtZV9mbGFnczsKfTsKCnN0cnVjdCB3aW1saWJfdXBkYXRlX2NvbW1hbmQgewoJ\nZW51bSB3aW1saWJfdXBkYXRlX29wIG9wOwoJdW5pb24gewoJCXN0cnVjdCB3aW1saWJfYWRkX2Nv\nbW1hbmQgYWRkOwoJCXN0cnVjdCB3aW1saWJfZGVsZXRlX2NvbW1hbmQgZGVsZXRlOwoJCXN0cnVj\ndCB3aW1saWJfcmVuYW1lX2NvbW1hbmQgcmVuYW1lOwoJfTsKfTsKCi8vQ2FsbGJhY2sgc2lnbmF0\ndXJlIGRlZmVuaWlvbnMKdHlwZWRlZiBpbnQgKCp3aW1saWJfaXRlcmF0ZV9kaXJfdHJlZV9jYWxs\nYmFja190KShjb25zdCBzdHJ1Y3Qgd2ltbGliX2Rpcl9lbnRyeSAqZGVudHJ5LCB2b2lkICp1c2Vy\nX2N0eCk7CnR5cGVkZWYgaW50ICgqd2ltbGliX2l0ZXJhdGVfbG9va3VwX3RhYmxlX2NhbGxiYWNr\nX3QpKGNvbnN0IHN0cnVjdCB3aW1saWJfcmVzb3VyY2VfZW50cnkgKnJlc291cmNlLCB2b2lkICp1\nc2VyX2N0eCk7CnR5cGVkZWYgZW51bSB3aW1saWJfcHJvZ3Jlc3Nfc3RhdHVzICgqd2ltbGliX3By\nb2dyZXNzX2Z1bmNfdCkoZW51bSB3aW1saWJfcHJvZ3Jlc3NfbXNnIG1zZ190eXBlLCB1bmlvbiB3\naW1saWJfcHJvZ3Jlc3NfaW5mbyAqaW5mbywgdm9pZCAqcHJvZ2N0eCk7CgovLyBGdW5jaW9uIHNp\nZ25hdHVyZXMKaW50IHdpbWxpYl9hZGRfZW1wdHlfaW1hZ2UoV0lNU3RydWN0ICp3aW0sIGNvbnN0\nIHdpbWxpYl90Y2hhciAqbmFtZSwgaW50ICpuZXdfaWR4X3JldCk7CmludCB3aW1saWJfYWRkX2lt\nYWdlKFdJTVN0cnVjdCAqd2ltLCBjb25zdCB3aW1saWJfdGNoYXIgKnNvdXJjZSwgY29uc3Qgd2lt\nbGliX3RjaGFyICpuYW1lLCBjb25zdCB3aW1saWJfdGNoYXIgKmNvbmZpZ19maWxlLCBpbnQgYWRk\nX2ZsYWdzKTsKaW50IHdpbWxpYl9hZGRfaW1hZ2VfbXVsdGlzb3VyY2UoV0lNU3RydWN0ICp3aW0s\nIGNvbnN0IHN0cnVjdCB3aW1saWJfY2FwdHVyZV9zb3VyY2UgKnNvdXJjZXMsIHNpemVfdCBudW1f\nc291cmNlcywgY29uc3Qgd2ltbGliX3RjaGFyICpuYW1lLCBjb25zdCB3aW1saWJfdGNoYXIgKmNv\nbmZpZ19maWxlLCBpbnQgYWRkX2ZsYWdzKTsKaW50IHdpbWxpYl9hZGRfdHJlZShXSU1TdHJ1Y3Qg\nKndpbSwgaW50IGltYWdlLCBjb25zdCB3aW1saWJfdGNoYXIgKmZzX3NvdXJjZV9wYXRoLCBjb25z\ndCB3aW1saWJfdGNoYXIgKndpbV90YXJnZXRfcGF0aCwgaW50IGFkZF9mbGFncyk7CmludCB3aW1s\naWJfY3JlYXRlX25ld193aW0oZW51bSB3aW1saWJfY29tcHJlc3Npb25fdHlwZSBjdHlwZSwgV0lN\nU3RydWN0ICoqd2ltX3JldCk7CmludCB3aW1saWJfZGVsZXRlX2ltYWdlKFdJTVN0cnVjdCAqd2lt\nLCBpbnQgaW1hZ2UpOwppbnQgd2ltbGliX2RlbGV0ZV9wYXRoKFdJTVN0cnVjdCAqd2ltLCBpbnQg\naW1hZ2UsIGNvbnN0IHdpbWxpYl90Y2hhciAqcGF0aCwgaW50IGRlbGV0ZV9mbGFncyk7CmludCB3\naW1saWJfZXhwb3J0X2ltYWdlKFdJTVN0cnVjdCAqc3JjX3dpbSwgaW50IHNyY19pbWFnZSwgV0lN\nU3RydWN0ICpkZXN0X3dpbSwgY29uc3Qgd2ltbGliX3RjaGFyICpkZXN0X25hbWUsIGNvbnN0IHdp\nbWxpYl90Y2hhciAqZGVzdF9kZXNjcmlwdGlvbiwgaW50IGV4cG9ydF9mbGFncyk7CmludCB3aW1s\naWJfZXh0cmFjdF9pbWFnZShXSU1TdHJ1Y3QgKndpbSwgaW50IGltYWdlLCBjb25zdCB3aW1saWJf\ndGNoYXIgKnRhcmdldCwgaW50IGV4dHJhY3RfZmxhZ3MpOwppbnQgd2ltbGliX2V4dHJhY3RfaW1h\nZ2VfZnJvbV9waXBlKGludCBwaXBlX2ZkLCBjb25zdCB3aW1saWJfdGNoYXIgKmltYWdlX251bV9v\ncl9uYW1lLCBjb25zdCB3aW1saWJfdGNoYXIgKnRhcmdldCwgaW50IGV4dHJhY3RfZmxhZ3MpOwov\nL2ludCB3aW1saWJfZXh0cmFjdF9pbWFnZV9mcm9tX3BpcGVfd2l0aF9wcm9ncmVzcyhpbnQgcGlw\nZV9mZCwgY29uc3Qgd2ltbGliX3RjaGFyICppbWFnZV9udW1fb3JfbmFtZSwgY29uc3Qgd2ltbGli\nX3RjaGFyICp0YXJnZXQsIGludCBleHRyYWN0X2ZsYWdzLCB3aW1saWJfcHJvZ3Jlc3NfZnVuY190\nIHByb2dmdW5jLCB2b2lkICpwcm9nY3R4KTsKaW50IHdpbWxpYl9leHRyYWN0X3BhdGhsaXN0KFdJ\nTVN0cnVjdCAqd2ltLCBpbnQgaW1hZ2UsIGNvbnN0IHdpbWxpYl90Y2hhciAqdGFyZ2V0LCBjb25z\ndCB3aW1saWJfdGNoYXIgKnBhdGhfbGlzdF9maWxlLCBpbnQgZXh0cmFjdF9mbGFncyk7CmludCB3\naW1saWJfZXh0cmFjdF9wYXRocyhXSU1TdHJ1Y3QgKndpbSwgaW50IGltYWdlLCBjb25zdCB3aW1s\naWJfdGNoYXIgKnRhcmdldCwgY29uc3Qgd2ltbGliX3RjaGFyICogY29uc3QgKnBhdGhzLCBzaXpl\nX3QgbnVtX3BhdGhzLCBpbnQgZXh0cmFjdF9mbGFncyk7CmludCB3aW1saWJfZXh0cmFjdF94bWxf\nZGF0YShXSU1TdHJ1Y3QgKndpbSwgRklMRSAqZnApOwp2b2lkIHdpbWxpYl9mcmVlKFdJTVN0cnVj\ndCAqd2ltKTsKY29uc3Qgd2ltbGliX3RjaGFyICogd2ltbGliX2dldF9jb21wcmVzc2lvbl90eXBl\nX3N0cmluZyhlbnVtIHdpbWxpYl9jb21wcmVzc2lvbl90eXBlIGN0eXBlKTsKY29uc3Qgd2ltbGli\nX3RjaGFyICogd2ltbGliX2dldF9lcnJvcl9zdHJpbmcoZW51bSB3aW1saWJfZXJyb3JfY29kZSBj\nb2RlKTsKY29uc3Qgd2ltbGliX3RjaGFyICogd2ltbGliX2dldF9pbWFnZV9kZXNjcmlwdGlvbihj\nb25zdCBXSU1TdHJ1Y3QgKndpbSwgaW50IGltYWdlKTsKY29uc3Qgd2ltbGliX3RjaGFyICogd2lt\nbGliX2dldF9pbWFnZV9uYW1lKGNvbnN0IFdJTVN0cnVjdCAqd2ltLCBpbnQgaW1hZ2UpOwpjb25z\ndCB3aW1saWJfdGNoYXIgKiB3aW1saWJfZ2V0X2ltYWdlX3Byb3BlcnR5KGNvbnN0IFdJTVN0cnVj\ndCAqd2ltLCBpbnQgaW1hZ2UsIGNvbnN0IHdpbWxpYl90Y2hhciAqcHJvcGVydHlfbmFtZSk7CnVp\nbnQzMl90IHdpbWxpYl9nZXRfdmVyc2lvbih2b2lkKTsKaW50IHdpbWxpYl9nZXRfd2ltX2luZm8o\nV0lNU3RydWN0ICp3aW0sIHN0cnVjdCB3aW1saWJfd2ltX2luZm8gKmluZm8pOwppbnQgd2ltbGli\nX2dldF94bWxfZGF0YShXSU1TdHJ1Y3QgKndpbSwgdm9pZCAqKmJ1Zl9yZXQsIHNpemVfdCAqYnVm\nc2l6ZV9yZXQpOwppbnQgd2ltbGliX2dsb2JhbF9pbml0KGludCBpbml0X2ZsYWdzKTsKdm9pZCB3\naW1saWJfZ2xvYmFsX2NsZWFudXAodm9pZCk7CmJvb2wgd2ltbGliX2ltYWdlX25hbWVfaW5fdXNl\nKGNvbnN0IFdJTVN0cnVjdCAqd2ltLCBjb25zdCB3aW1saWJfdGNoYXIgKm5hbWUpOwppbnQgd2lt\nbGliX2l0ZXJhdGVfZGlyX3RyZWUoV0lNU3RydWN0ICp3aW0sIGludCBpbWFnZSwgY29uc3Qgd2lt\nbGliX3RjaGFyICpwYXRoLCBpbnQgZmxhZ3MsIHdpbWxpYl9pdGVyYXRlX2Rpcl90cmVlX2NhbGxi\nYWNrX3QgY2IsIHZvaWQgKnVzZXJfY3R4KTsKaW50IHdpbWxpYl9pdGVyYXRlX2xvb2t1cF90YWJs\nZShXSU1TdHJ1Y3QgKndpbSwgaW50IGZsYWdzLCB3aW1saWJfaXRlcmF0ZV9sb29rdXBfdGFibGVf\nY2FsbGJhY2tfdCBjYiwgdm9pZCAqdXNlcl9jdHgpOwppbnQgd2ltbGliX2pvaW4oY29uc3Qgd2lt\nbGliX3RjaGFyICogY29uc3QgKnN3bXMsIHVuc2lnbmVkIG51bV9zd21zLCBjb25zdCB3aW1saWJf\ndGNoYXIgKm91dHB1dF9wYXRoLCBpbnQgc3dtX29wZW5fZmxhZ3MsIGludCB3aW1fd3JpdGVfZmxh\nZ3MpOwppbnQgd2ltbGliX2pvaW5fd2l0aF9wcm9ncmVzcyhjb25zdCB3aW1saWJfdGNoYXIgKiBj\nb25zdCAqc3dtcywgdW5zaWduZWQgbnVtX3N3bXMsIGNvbnN0IHdpbWxpYl90Y2hhciAqb3V0cHV0\nX3BhdGgsIGludCBzd21fb3Blbl9mbGFncywgaW50IHdpbV93cml0ZV9mbGFncywgd2ltbGliX3By\nb2dyZXNzX2Z1bmNfdCBwcm9nZnVuYywgdm9pZCAqcHJvZ2N0eCk7CmludCB3aW1saWJfbW91bnRf\naW1hZ2UoV0lNU3RydWN0ICp3aW0sIGludCBpbWFnZSwgY29uc3Qgd2ltbGliX3RjaGFyICpkaXIs\nIGludCBtb3VudF9mbGFncywgY29uc3Qgd2ltbGliX3RjaGFyICpzdGFnaW5nX2Rpcik7CmludCB3\naW1saWJfb3Blbl93aW0oY29uc3Qgd2ltbGliX3RjaGFyICp3aW1fZmlsZSwgaW50IG9wZW5fZmxh\nZ3MsIFdJTVN0cnVjdCAqKndpbV9yZXQpOwppbnQgd2ltbGliX29wZW5fd2ltX3dpdGhfcHJvZ3Jl\nc3MoY29uc3Qgd2ltbGliX3RjaGFyICp3aW1fZmlsZSwgaW50IG9wZW5fZmxhZ3MsIFdJTVN0cnVj\ndCAqKndpbV9yZXQsIHdpbWxpYl9wcm9ncmVzc19mdW5jX3QgcHJvZ2Z1bmMsIHZvaWQgKnByb2dj\ndHgpOwppbnQgd2ltbGliX292ZXJ3cml0ZShXSU1TdHJ1Y3QgKndpbSwgaW50IHdyaXRlX2ZsYWdz\nLCB1bnNpZ25lZCBudW1fdGhyZWFkcyk7CnZvaWQgd2ltbGliX3ByaW50X2F2YWlsYWJsZV9pbWFn\nZXMoY29uc3QgV0lNU3RydWN0ICp3aW0sIGludCBpbWFnZSk7CnZvaWQgd2ltbGliX3ByaW50X2hl\nYWRlcihjb25zdCBXSU1TdHJ1Y3QgKndpbSk7CmludCB3aW1saWJfcmVmZXJlbmNlX3Jlc291cmNl\nX2ZpbGVzKFdJTVN0cnVjdCAqd2ltLCBjb25zdCB3aW1saWJfdGNoYXIgKiBjb25zdCAqcmVzb3Vy\nY2Vfd2ltZmlsZXNfb3JfZ2xvYnMsIHVuc2lnbmVkIGNvdW50LCBpbnQgcmVmX2ZsYWdzLCBpbnQg\nb3Blbl9mbGFncyk7CmludCB3aW1saWJfcmVmZXJlbmNlX3Jlc291cmNlcyhXSU1TdHJ1Y3QgKndp\nbSwgV0lNU3RydWN0ICoqcmVzb3VyY2Vfd2ltcywgdW5zaWduZWQgbnVtX3Jlc291cmNlX3dpbXMs\nIGludCByZWZfZmxhZ3MpOwppbnQgd2ltbGliX3JlZmVyZW5jZV90ZW1wbGF0ZV9pbWFnZShXSU1T\ndHJ1Y3QgKndpbSwgaW50IG5ld19pbWFnZSwgV0lNU3RydWN0ICp0ZW1wbGF0ZV93aW0sIGludCB0\nZW1wbGF0ZV9pbWFnZSwgaW50IGZsYWdzKTsKdm9pZCB3aW1saWJfcmVnaXN0ZXJfcHJvZ3Jlc3Nf\nZnVuY3Rpb24oV0lNU3RydWN0ICp3aW0sIHdpbWxpYl9wcm9ncmVzc19mdW5jX3QgcHJvZ2Z1bmMs\nIHZvaWQgKnByb2djdHgpOwppbnQgd2ltbGliX3JlbmFtZV9wYXRoKFdJTVN0cnVjdCAqd2ltLCBp\nbnQgaW1hZ2UsIGNvbnN0IHdpbWxpYl90Y2hhciAqc291cmNlX3BhdGgsIGNvbnN0IHdpbWxpYl90\nY2hhciAqZGVzdF9wYXRoKTsKaW50IHdpbWxpYl9yZXNvbHZlX2ltYWdlKFdJTVN0cnVjdCAqd2lt\nLCBjb25zdCB3aW1saWJfdGNoYXIgKmltYWdlX25hbWVfb3JfbnVtKTsKaW50IHdpbWxpYl9zZXRf\nZXJyb3JfZmlsZShGSUxFICpmcCk7CmludCB3aW1saWJfc2V0X2Vycm9yX2ZpbGVfYnlfbmFtZShj\nb25zdCB3aW1saWJfdGNoYXIgKnBhdGgpOwppbnQgd2ltbGliX3NldF9pbWFnZV9kZXNjcmlwdG9u\nKFdJTVN0cnVjdCAqd2ltLCBpbnQgaW1hZ2UsIGNvbnN0IHdpbWxpYl90Y2hhciAqZGVzY3JpcHRp\nb24pOwppbnQgd2ltbGliX3NldF9pbWFnZV9mbGFncyhXSU1TdHJ1Y3QgKndpbSwgaW50IGltYWdl\nLCBjb25zdCB3aW1saWJfdGNoYXIgKmZsYWdzKTsKaW50IHdpbWxpYl9zZXRfaW1hZ2VfbmFtZShX\nSU1TdHJ1Y3QgKndpbSwgaW50IGltYWdlLCBjb25zdCB3aW1saWJfdGNoYXIgKm5hbWUpOwppbnQg\nd2ltbGliX3NldF9pbWFnZV9wcm9wZXJ0eShXSU1TdHJ1Y3QgKndpbSwgaW50IGltYWdlLCBjb25z\ndCB3aW1saWJfdGNoYXIgKnByb3BlcnR5X25hbWUsIGNvbnN0IHdpbWxpYl90Y2hhciAqcHJvcGVy\ndHlfdmFsdWUpOwppbnQgd2ltbGliX3NldF9tZW1vcnlfYWxsb2NhdG9yKHZvaWQgKigqbWFsbG9j\nX2Z1bmMpKHNpemVfdCksIHZvaWQgKCpmcmVlX2Z1bmMpKHZvaWQgKiksIHZvaWQgKigqcmVhbGxv\nY19mdW5jKSh2b2lkICosIHNpemVfdCkpOwppbnQgd2ltbGliX3NldF9vdXRwdXRfY2h1bmtfc2l6\nZShXSU1TdHJ1Y3QgKndpbSwgdWludDMyX3QgY2h1bmtfc2l6ZSk7CmludCB3aW1saWJfc2V0X291\ndHB1dF9wYWNrX2NodW5rX3NpemUoV0lNU3RydWN0ICp3aW0sIHVpbnQzMl90IGNodW5rX3NpemUp\nOwppbnQgd2ltbGliX3NldF9vdXRwdXRfY29tcHJlc3Npb25fdHlwZShXSU1TdHJ1Y3QgKndpbSwg\nZW51bSB3aW1saWJfY29tcHJlc3Npb25fdHlwZSBjdHlwZSk7CmludCB3aW1saWJfc2V0X291dHB1\ndF9wYWNrX2NvbXByZXNzaW9uX3R5cGUoV0lNU3RydWN0ICp3aW0sIGVudW0gd2ltbGliX2NvbXBy\nZXNzaW9uX3R5cGUgY3R5cGUpOwppbnQgd2ltbGliX3NldF9wcmludF9lcnJvcnMoYm9vbCBzaG93\nX21lc3NhZ2VzKTsKaW50IHdpbWxpYl9zZXRfd2ltX2luZm8oV0lNU3RydWN0ICp3aW0sIGNvbnN0\nIHN0cnVjdCB3aW1saWJfd2ltX2luZm8gKmluZm8sIGludCB3aGljaCk7CmludCB3aW1saWJfc3Bs\naXQoV0lNU3RydWN0ICp3aW0sIGNvbnN0IHdpbWxpYl90Y2hhciAqc3dtX25hbWUsIHVpbnQ2NF90\nIHBhcnRfc2l6ZSwgaW50IHdyaXRlX2ZsYWdzKTsKaW50IHdpbWxpYl92ZXJpZnlfd2ltKFdJTVN0\ncnVjdCAqd2ltLCBpbnQgdmVyaWZ5X2ZsYWdzKTsKaW50IHdpbWxpYl91bm1vdW50X2ltYWdlKGNv\nbnN0IHdpbWxpYl90Y2hhciAqZGlyLCBpbnQgdW5tb3VudF9mbGFncyk7CmludCB3aW1saWJfdW5t\nb3VudF9pbWFnZV93aXRoX3Byb2dyZXNzKGNvbnN0IHdpbWxpYl90Y2hhciAqZGlyLCBpbnQgdW5t\nb3VudF9mbGFncywgd2ltbGliX3Byb2dyZXNzX2Z1bmNfdCBwcm9nZnVuYywgdm9pZCAqcHJvZ2N0\neCk7CmludCB3aW1saWJfdXBkYXRlX2ltYWdlKFdJTVN0cnVjdCAqd2ltLCBpbnQgaW1hZ2UsIGNv\nbnN0IHN0cnVjdCB3aW1saWJfdXBkYXRlX2NvbW1hbmQgKmNtZHMsIHNpemVfdCBudW1fY21kcywg\naW50IHVwZGF0ZV9mbGFncyk7CmludCB3aW1saWJfd3JpdGUoV0lNU3RydWN0ICp3aW0sIGNvbnN0\nIHdpbWxpYl90Y2hhciAqcGF0aCwgaW50IGltYWdlLCBpbnQgd3JpdGVfZmxhZ3MsIHVuc2lnbmVk\nIG51bV90aHJlYWRzKTsKaW50IHdpbWxpYl93cml0ZV90b19mZChXSU1TdHJ1Y3QgKndpbSwgaW50\nIGZkLCBpbnQgaW1hZ2UsIGludCB3cml0ZV9mbGFncywgdW5zaWduZWQgbnVtX3RocmVhZHMpOwpp\nbnQgd2ltbGliX3NldF9kZWZhdWx0X2NvbXByZXNzaW9uX2xldmVsKGludCBjdHlwZSwgdW5zaWdu\nZWQgaW50IGNvbXByZXNzaW9uX2xldmVsKTsKdWludDY0X3Qgd2ltbGliX2dldF9jb21wcmVzc29y\nX25lZWRlZF9tZW1vcnkoZW51bSB3aW1saWJfY29tcHJlc3Npb25fdHlwZSBjdHlwZSwgc2l6ZV90\nIG1heF9ibG9ja19zaXplLCB1bnNpZ25lZCBpbnQgY29tcHJlc3Npb25fbGV2ZWwpOwppbnQgd2lt\nbGliX2NyZWF0ZV9jb21wcmVzc29yKGVudW0gd2ltbGliX2NvbXByZXNzaW9uX3R5cGUgY3R5cGUs\nIHNpemVfdCBtYXhfYmxvY2tfc2l6ZSwgdW5zaWduZWQgaW50IGNvbXByZXNzaW9uX2xldmVsLCBz\ndHJ1Y3Qgd2ltbGliX2NvbXByZXNzb3IgKipjb21wcmVzc29yX3JldCk7CnNpemVfdCB3aW1saWJf\nY29tcHJlc3MoY29uc3Qgdm9pZCAqdW5jb21wcmVzc2VkX2RhdGEsIHNpemVfdCB1bmNvbXByZXNz\nZWRfc2l6ZSwgdm9pZCAqY29tcHJlc3NlZF9kYXRhLCBzaXplX3QgY29tcHJlc3NlZF9zaXplX2F2\nYWlsLCBzdHJ1Y3Qgd2ltbGliX2NvbXByZXNzb3IgKmNvbXByZXNzb3IpOwp2b2lkIHdpbWxpYl9m\ncmVlX2NvbXByZXNzb3Ioc3RydWN0IHdpbWxpYl9jb21wcmVzc29yICpjb21wcmVzc29yKTsKaW50\nIHdpbWxpYl9jcmVhdGVfZGVjb21wcmVzc29yKGVudW0gd2ltbGliX2NvbXByZXNzaW9uX3R5cGUg\nY3R5cGUsIHNpemVfdCBtYXhfYmxvY2tfc2l6ZSwgc3RydWN0IHdpbWxpYl9kZWNvbXByZXNzb3Ig\nKipkZWNvbXByZXNzb3JfcmV0KTsKaW50IHdpbWxpYl9kZWNvbXByZXNzKGNvbnN0IHZvaWQgKmNv\nbXByZXNzZWRfZGF0YSwgc2l6ZV90IGNvbXByZXNzZWRfc2l6ZSwgdm9pZCAqdW5jb21wcmVzc2Vk\nX2RhdGEsIHNpemVfdCB1bmNvbXByZXNzZWRfc2l6ZSwgc3RydWN0IHdpbWxpYl9kZWNvbXByZXNz\nb3IgKmRlY29tcHJlc3Nvcik7CnZvaWQgd2ltbGliX2ZyZWVfZGVjb21wcmVzc29yKHN0cnVjdCB3\naW1saWJfZGVjb21wcmVzc29yICpkZWNvbXByZXNzb3IpOw==\n'.decode("base64")
+WIMLIB_DEFAULT_CDEFS = """
+typedef char wimlib_tchar;
+struct wimlib_timespec {
+        int64_t tv_sec;
+        int32_t tv_nsec;
+};
 
+typedef struct WIMStruct WIMStruct;
+
+union wimlib_progress_info {
+        struct wimlib_progress_info_write_streams {
+                uint64_t total_bytes;
+                uint64_t total_streams;
+                uint64_t completed_bytes;
+                uint64_t completed_streams;
+                uint32_t num_threads;
+                int32_t compression_type;
+                uint32_t total_parts;
+                uint32_t completed_parts;
+        } write_streams;
+        struct wimlib_progress_info_scan {
+                const wimlib_tchar *source;
+                const wimlib_tchar *cur_path;
+                enum {
+                        WIMLIB_SCAN_DENTRY_OK = 0,
+                        WIMLIB_SCAN_DENTRY_EXCLUDED = 1,
+                        WIMLIB_SCAN_DENTRY_UNSUPPORTED = 2,
+                        WIMLIB_SCAN_DENTRY_FIXED_SYMLINK = 3,
+                        WIMLIB_SCAN_DENTRY_NOT_FIXED_SYMLINK = 4,
+                } status;
+                union {
+                        const wimlib_tchar *wim_target_path;
+                        const wimlib_tchar *symlink_target;
+                };
+                uint64_t num_dirs_scanned;
+                uint64_t num_nondirs_scanned;
+                uint64_t num_bytes_scanned;
+        } scan;
+        struct wimlib_progress_info_extract {
+                uint32_t image;
+                uint32_t extract_flags;
+                const wimlib_tchar *wimfile_name;
+                const wimlib_tchar *image_name;
+                const wimlib_tchar *target;
+                const wimlib_tchar *reserved;
+                uint64_t total_bytes;
+                uint64_t completed_bytes;
+                uint64_t total_streams;
+                uint64_t completed_streams;
+                uint32_t part_number;
+                uint32_t total_parts;
+                uint8_t guid[16];
+                uint64_t current_file_count;
+                uint64_t end_file_count;
+        } extract;
+        struct wimlib_progress_info_rename {
+                const wimlib_tchar *from;
+                const wimlib_tchar *to;
+        } rename;
+        struct wimlib_progress_info_update {
+                const struct wimlib_update_command *command;
+                size_t completed_commands;
+                size_t total_commands;
+        } update;
+        struct wimlib_progress_info_integrity {
+                uint64_t total_bytes;
+                uint64_t completed_bytes;
+                uint32_t total_chunks;
+                uint32_t completed_chunks;
+                uint32_t chunk_size;
+                const wimlib_tchar *filename;
+        } integrity;
+        struct wimlib_progress_info_split {
+                uint64_t total_bytes;
+                uint64_t completed_bytes;
+                unsigned cur_part_number;
+                unsigned total_parts;
+    wimlib_tchar *part_name;
+        } split;
+        struct wimlib_progress_info_replace {
+                const wimlib_tchar *path_in_wim;
+        } replace;
+        struct wimlib_progress_info_wimboot_exclude {
+                const wimlib_tchar *path_in_wim;
+                const wimlib_tchar *extraction_path;
+        } wimboot_exclude;
+        struct wimlib_progress_info_unmount {
+                const wimlib_tchar *mountpoint;
+                const wimlib_tchar *mounted_wim;
+                uint32_t mounted_image;
+                uint32_t mount_flags;
+                uint32_t unmount_flags;
+        } unmount;
+        struct wimlib_progress_info_done_with_file {
+                const wimlib_tchar *path_to_file;
+        } done_with_file;
+        struct wimlib_progress_info_verify_image {
+                const wimlib_tchar *wimfile;
+                uint32_t total_images;
+                uint32_t current_image;
+        } verify_image;
+        struct wimlib_progress_info_verify_streams {
+                const wimlib_tchar *wimfile;
+                uint64_t total_streams;
+                uint64_t total_bytes;
+                uint64_t completed_streams;
+                uint64_t completed_bytes;
+        } verify_streams;
+        struct wimlib_progress_info_test_file_exclusion {
+                const wimlib_tchar *path;
+                bool will_exclude;
+        } test_file_exclusion;
+        struct wimlib_progress_info_handle_error {
+                const wimlib_tchar *path;
+                int error_code;
+                bool will_ignore;
+        } handle_error;
+};
+
+struct wimlib_capture_source {
+        wimlib_tchar *fs_source_path;
+        wimlib_tchar *wim_target_path;
+        long reserved;
+};
+
+struct wimlib_wim_info {
+        uint8_t guid[16];
+        uint32_t image_count;
+        uint32_t boot_index;
+        uint32_t wim_version;
+        uint32_t chunk_size;
+        uint16_t part_number;
+        uint16_t total_parts;
+        int32_t compression_type;
+        uint64_t total_bytes;
+        uint32_t has_integrity_table : 1;
+        uint32_t opened_from_file : 1;
+        uint32_t is_readonly : 1;
+        uint32_t has_rpfix : 1;
+        uint32_t is_marked_readonly : 1;
+        uint32_t spanned : 1;
+        uint32_t write_in_progress : 1;
+        uint32_t metadata_only : 1;
+        uint32_t resource_only : 1;
+        uint32_t pipable : 1;
+        uint32_t reserved_flags : 22;
+        uint32_t reserved[9];
+};
+
+struct wimlib_resource_entry {
+        uint64_t uncompressed_size;
+        uint64_t compressed_size;
+        uint64_t offset;
+        uint8_t sha1_hash[20];
+        uint32_t part_number;
+        uint32_t reference_count;
+        uint32_t is_compressed : 1;
+        uint32_t is_metadata : 1;
+        uint32_t is_free : 1;
+        uint32_t is_spanned : 1;
+        uint32_t is_missing : 1;
+        uint32_t packed : 1;
+        uint32_t reserved_flags : 26;
+        uint64_t raw_resource_offset_in_wim;
+        uint64_t raw_resource_compressed_size;
+        uint64_t raw_resource_uncompressed_size;
+        uint64_t reserved[1];
+};
+
+struct wimlib_stream_entry {
+        const wimlib_tchar *stream_name;
+        struct wimlib_resource_entry resource;
+        uint64_t reserved[4];
+};
+
+struct wimlib_object_id {
+        uint8_t object_id[16];
+        uint8_t birth_volume_id[16];
+        uint8_t birth_object_id[16];
+        uint8_t domain_id[16];
+};
+
+struct wimlib_dir_entry {
+        const wimlib_tchar *filename;
+        const wimlib_tchar *dos_name;
+        const wimlib_tchar *full_path;
+        size_t depth;
+        const char *security_descriptor;
+        size_t security_descriptor_size;
+        uint32_t attributes;
+        uint32_t reparse_tag;
+        uint32_t num_links;
+        uint32_t num_named_streams;
+        uint64_t hard_link_group_id;
+        struct wimlib_timespec creation_time;
+        struct wimlib_timespec last_write_time;
+        struct wimlib_timespec last_access_time;
+        uint32_t unix_uid;
+        uint32_t unix_gid;
+        uint32_t unix_mode;
+        uint32_t unix_rdev;
+        struct wimlib_object_id object_id;
+        int32_t creation_time_high;
+        int32_t last_write_time_high;
+        int32_t last_access_time_high;
+        int32_t reserved2;
+        uint64_t reserved[4];
+        struct wimlib_stream_entry streams[];
+};
+
+struct wimlib_add_command {
+        wimlib_tchar *fs_source_path;
+        wimlib_tchar *wim_target_path;
+        wimlib_tchar *config_file;
+        int add_flags;
+};
+
+struct wimlib_delete_command {
+        wimlib_tchar *wim_path;
+        int delete_flags;
+};
+
+struct wimlib_rename_command {
+        wimlib_tchar *wim_source_path;
+        wimlib_tchar *wim_target_path;
+        int rename_flags;
+};
+
+struct wimlib_update_command {
+        enum wimlib_update_op op;
+        union {
+                struct wimlib_add_command add;
+                struct wimlib_delete_command delete;
+                struct wimlib_rename_command rename;
+        };
+};
+
+//Callback signature defeniions
+typedef int (*wimlib_iterate_dir_tree_callback_t)(const struct wimlib_dir_entry *dentry, void *user_ctx);
+typedef int (*wimlib_iterate_lookup_table_callback_t)(const struct wimlib_resource_entry *resource, void *user_ctx);
+typedef enum wimlib_progress_status (*wimlib_progress_func_t)(enum wimlib_progress_msg msg_type, union wimlib_progress_info *info, void *progctx);
+
+// Funcion signatures
+int wimlib_add_empty_image(WIMStruct *wim, const wimlib_tchar *name, int *new_idx_ret);
+int wimlib_add_image(WIMStruct *wim, const wimlib_tchar *source, const wimlib_tchar *name, const wimlib_tchar *config_file, int add_flags);
+int wimlib_add_image_multisource(WIMStruct *wim, const struct wimlib_capture_source *sources, size_t num_sources, const wimlib_tchar *name, const wimlib_tchar *config_file, int add_flags);
+int wimlib_add_tree(WIMStruct *wim, int image, const wimlib_tchar *fs_source_path, const wimlib_tchar *wim_target_path, int add_flags);
+int wimlib_create_new_wim(enum wimlib_compression_type ctype, WIMStruct **wim_ret);
+int wimlib_delete_image(WIMStruct *wim, int image);
+int wimlib_delete_path(WIMStruct *wim, int image, const wimlib_tchar *path, int delete_flags);
+int wimlib_export_image(WIMStruct *src_wim, int src_image, WIMStruct *dest_wim, const wimlib_tchar *dest_name, const wimlib_tchar *dest_description, int export_flags);
+int wimlib_extract_image(WIMStruct *wim, int image, const wimlib_tchar *target, int extract_flags);
+int wimlib_extract_image_from_pipe(int pipe_fd, const wimlib_tchar *image_num_or_name, const wimlib_tchar *target, int extract_flags);
+//int wimlib_extract_image_from_pipe_with_progress(int pipe_fd, const wimlib_tchar *image_num_or_name, const wimlib_tchar *target, int extract_flags, wimlib_progress_func_t progfunc, void *progctx);
+int wimlib_extract_pathlist(WIMStruct *wim, int image, const wimlib_tchar *target, const wimlib_tchar *path_list_file, int extract_flags);
+int wimlib_extract_paths(WIMStruct *wim, int image, const wimlib_tchar *target, const wimlib_tchar * const *paths, size_t num_paths, int extract_flags);
+int wimlib_extract_xml_data(WIMStruct *wim, FILE *fp);
+void wimlib_free(WIMStruct *wim);
+const wimlib_tchar * wimlib_get_compression_type_string(enum wimlib_compression_type ctype);
+const wimlib_tchar * wimlib_get_error_string(enum wimlib_error_code code);
+const wimlib_tchar * wimlib_get_image_description(const WIMStruct *wim, int image);
+const wimlib_tchar * wimlib_get_image_name(const WIMStruct *wim, int image);
+const wimlib_tchar * wimlib_get_image_property(const WIMStruct *wim, int image, const wimlib_tchar *property_name);
+uint32_t wimlib_get_version(void);
+int wimlib_get_wim_info(WIMStruct *wim, struct wimlib_wim_info *info);
+int wimlib_get_xml_data(WIMStruct *wim, void **buf_ret, size_t *bufsize_ret);
+int wimlib_global_init(int init_flags);
+void wimlib_global_cleanup(void);
+bool wimlib_image_name_in_use(const WIMStruct *wim, const wimlib_tchar *name);
+int wimlib_iterate_dir_tree(WIMStruct *wim, int image, const wimlib_tchar *path, int flags, wimlib_iterate_dir_tree_callback_t cb, void *user_ctx);
+int wimlib_iterate_lookup_table(WIMStruct *wim, int flags, wimlib_iterate_lookup_table_callback_t cb, void *user_ctx);
+int wimlib_join(const wimlib_tchar * const *swms, unsigned num_swms, const wimlib_tchar *output_path, int swm_open_flags, int wim_write_flags);
+int wimlib_join_with_progress(const wimlib_tchar * const *swms, unsigned num_swms, const wimlib_tchar *output_path, int swm_open_flags, int wim_write_flags, wimlib_progress_func_t progfunc, void *progctx);
+int wimlib_mount_image(WIMStruct *wim, int image, const wimlib_tchar *dir, int mount_flags, const wimlib_tchar *staging_dir);
+int wimlib_open_wim(const wimlib_tchar *wim_file, int open_flags, WIMStruct **wim_ret);
+int wimlib_open_wim_with_progress(const wimlib_tchar *wim_file, int open_flags, WIMStruct **wim_ret, wimlib_progress_func_t progfunc, void *progctx);
+int wimlib_overwrite(WIMStruct *wim, int write_flags, unsigned num_threads);
+void wimlib_print_available_images(const WIMStruct *wim, int image);
+void wimlib_print_header(const WIMStruct *wim);
+int wimlib_reference_resource_files(WIMStruct *wim, const wimlib_tchar * const *resource_wimfiles_or_globs, unsigned count, int ref_flags, int open_flags);
+int wimlib_reference_resources(WIMStruct *wim, WIMStruct **resource_wims, unsigned num_resource_wims, int ref_flags);
+int wimlib_reference_template_image(WIMStruct *wim, int new_image, WIMStruct *template_wim, int template_image, int flags);
+void wimlib_register_progress_function(WIMStruct *wim, wimlib_progress_func_t progfunc, void *progctx);
+int wimlib_rename_path(WIMStruct *wim, int image, const wimlib_tchar *source_path, const wimlib_tchar *dest_path);
+int wimlib_resolve_image(WIMStruct *wim, const wimlib_tchar *image_name_or_num);
+int wimlib_set_error_file(FILE *fp);
+int wimlib_set_error_file_by_name(const wimlib_tchar *path);
+int wimlib_set_image_descripton(WIMStruct *wim, int image, const wimlib_tchar *description);
+int wimlib_set_image_flags(WIMStruct *wim, int image, const wimlib_tchar *flags);
+int wimlib_set_image_name(WIMStruct *wim, int image, const wimlib_tchar *name);
+int wimlib_set_image_property(WIMStruct *wim, int image, const wimlib_tchar *property_name, const wimlib_tchar *property_value);
+int wimlib_set_memory_allocator(void *(*malloc_func)(size_t), void (*free_func)(void *), void *(*realloc_func)(void *, size_t));
+int wimlib_set_output_chunk_size(WIMStruct *wim, uint32_t chunk_size);
+int wimlib_set_output_pack_chunk_size(WIMStruct *wim, uint32_t chunk_size);
+int wimlib_set_output_compression_type(WIMStruct *wim, enum wimlib_compression_type ctype);
+int wimlib_set_output_pack_compression_type(WIMStruct *wim, enum wimlib_compression_type ctype);
+int wimlib_set_print_errors(bool show_messages);
+int wimlib_set_wim_info(WIMStruct *wim, const struct wimlib_wim_info *info, int which);
+int wimlib_split(WIMStruct *wim, const wimlib_tchar *swm_name, uint64_t part_size, int write_flags);
+int wimlib_verify_wim(WIMStruct *wim, int verify_flags);
+int wimlib_unmount_image(const wimlib_tchar *dir, int unmount_flags);
+int wimlib_unmount_image_with_progress(const wimlib_tchar *dir, int unmount_flags, wimlib_progress_func_t progfunc, void *progctx);
+int wimlib_update_image(WIMStruct *wim, int image, const struct wimlib_update_command *cmds, size_t num_cmds, int update_flags);
+int wimlib_write(WIMStruct *wim, const wimlib_tchar *path, int image, int write_flags, unsigned num_threads);
+int wimlib_write_to_fd(WIMStruct *wim, int fd, int image, int write_flags, unsigned num_threads);
+int wimlib_set_default_compression_level(int ctype, unsigned int compression_level);
+uint64_t wimlib_get_compressor_needed_memory(enum wimlib_compression_type ctype, size_t max_block_size, unsigned int compression_level);
+int wimlib_create_compressor(enum wimlib_compression_type ctype, size_t max_block_size, unsigned int compression_level, struct wimlib_compressor **compressor_ret);
+size_t wimlib_compress(const void *uncompressed_data, size_t uncompressed_size, void *compressed_data, size_t compressed_size_avail, struct wimlib_compressor *compressor);
+void wimlib_free_compressor(struct wimlib_compressor *compressor);
+int wimlib_create_decompressor(enum wimlib_compression_type ctype, size_t max_block_size, struct wimlib_decompressor **decompressor_ret);
+int wimlib_decompress(const void *compressed_data, size_t compressed_size, void *uncompressed_data, size_t uncompressed_size, struct wimlib_decompressor *decompressor);
+void wimlib_free_decompressor(struct wimlib_decompressor *decompressor);
+"""
 
 class WIMBackend(object):
         """
