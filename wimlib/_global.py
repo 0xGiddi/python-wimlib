@@ -37,3 +37,16 @@ def global_cleanup():
         except Exception as ex:
                 # It's not critical if this function call fails.
                 pass
+
+class Observerable(object):
+    def __init__(self):
+        self._callbacks = list()
+
+    def _register(self, callback):
+        self._callbacks.append(callback)
+
+    def _notify(self, **attrs):
+        event = type('Event', (object,), attrs)
+        event.source = self
+        for cbfunc in self._callbacks:
+            cbfunc(event)

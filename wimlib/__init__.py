@@ -9,7 +9,9 @@ ENCODING = _backend.encoding
 from wimlib.error import WIMError, set_error_printing, set_error_file_name
 from wimlib._global import *
 import wimlib.compression
+import wimlib.progress
 from wimlib.info import *
+from wimlib.image import *
 from wimlib.file import *
 # from .file import WIMFile, WIMInfo
 # from .image import WIMImage

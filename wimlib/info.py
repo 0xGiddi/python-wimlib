@@ -15,6 +15,13 @@ class WIMInfo(object):
 		if ret:
 			raise WIMError(ret)
 
+
+	def _refresh(self):
+		""" Callback for """
+		ret = _backend.lib.wimlib_get_wim_info(self._wim_struct, self._wim_info)
+		if ret:
+			raise WIMError(ret)
+
 	def write(self, flags):
 		ret = _backend.lib.wimlib_set_wim_info(self._wim_struct, self._wim_info, flags)
 		if ret:
