@@ -12,41 +12,26 @@ INIT_FLAG_DEFAULT_CASE_INSENSITIVE = 0x00000020
 NO_IMAGE = 0
 ALL_IMAGES = -1
 
+def wimlib_version():
+    """ Get wimlib version number as tuple of (MAJOR, MINOR, PATCH) """
+    ver = _backend.lib.wimlib_get_version()
+    return (ver >> 20, (ver >> 10) & 0x3ff, ver & 0x3ff)
 
-# Global funcions
 def global_init(init_flags=0):
-        """
-        Initialization function for wimlib.
-
-        This function should be called before any use of wimlib.
-        If the function is not called before use, a automaic call
-        will take place with init_flags=0.
-        """
-        ret = _backend.lib.wimlib_global_init(init_flags)
-        if ret:
-                raise WIMError(ret)
-
+    """ Initialization function for wimlib, called by default with flags=0"""
+    ret = _backend.lib.wimlib_global_init(flags)
+    if ret:
+        raise WIMError(ret)
 
 def global_cleanup():
-        """
-        Cleanup function for wimlib.
-        This function is auto called by atexit.
-        """
-        try:
-                _backend.lib.wimlib_global_cleanup()
-        except Exception as ex:
-                # It's not critical if this function call fails.
-                pass
+    """ Cleanup function for wimlib, call is optional. """
+    _backend.lib.wimlib_global_cleanup()
 
-class Observerable(object):
-    def __init__(self):
-        self._callbacks = list()
+def join():
+    raise NotImplementedError()
 
-    def _register(self, callback):
-        self._callbacks.append(callback)
+def join_with_progress():
+    raise NotImplementedError()
 
-    def _notify(self, **attrs):
-        event = type('Event', (object,), attrs)
-        event.source = self
-        for cbfunc in self._callbacks:
-            cbfunc(event)
+def set_memory_allocator():
+    raise NotImplementedError()

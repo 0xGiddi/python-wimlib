@@ -32,24 +32,3 @@ PROGRESS_MSG_VERIFY_STREAMS = 29
 # Status consts - used as returns for progress callback
 PROGRESS_STATUS_CONTINUE = 0
 PROGRESS_STATUS_ABORT = 1
-
-ProgressExtract = type('ProgressExtract', (object,), {})
-ProgressScan = type('ProgressScan', (object,), {})
-ProgressWriteStreams = type('ProgressWriteStreams', (object,), {})
-ProgressRename = type('ProgressRename', (object,), {})
-ProgressUpdate = type('ProgressUpdate', (object,), {})
-ProgressIntegrity = type('ProgressIntegrity', (object,), {})
-ProgressSplit = type('ProgressSplit', (object,), {})
-ProgressReplace = type('ProgressReplace', (object,), {})
-ProgressWimbootExclude = type('ProgressWimbootExclude', (object,), {})
-ProgressUnmount = type('ProgressUnmount', (object,), {})
-ProgressDoneWithFile = type('ProgressDoneWithFile', (object,), {})
-ProgressVerifyImage = type('ProgressVerifyImage', (object,), {})
-ProgressVerifyStreams = type('ProgressVerifyStreams', (object,), {})
-ProgressTestFileExclusion = type('ProgressTestFileExclusion', (object,), {})
-ProgressHandleError = type('ProgressHandleError', (object,), {})
-	
-
-class WIMProgressInfo(object):
-	def __init__(self):
-		pass

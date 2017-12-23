@@ -77,52 +77,25 @@ ERR_NOT_PERMITTED_TO_UNMOUNT = 81
 
 
 class WIMError(Exception):
-        """
-        Common base class for all wimlib exceptions.
-        """
-        def __init__(self, error):
-                """
-                :param error: wimlib error number or string
-                :type error: string containing excepion message
-                :type error: int from WIMError constants (defined as WIMLIB_ERR_* in wimlib.h)
-                """
-                self.errno = error
-                if type(error) == int:
-                        self.errno = error
-                        super(WIMError, self).__init__(WIMError.get_error_string(self.errno))
-                else:
-                        super(WIMError, self).__init__(self.errno)
+    def __init__(self, error):
+        self.error = error
+        if type(error) == int:
+            super(WIMError, self).__init__(get_error_string(self.error))
+        else:
+            super(WIMError, self).__init__(self.error)
 
-        @staticmethod
-        def get_error_string(errno):
-                """
-                Retrive human readable error dtring from WIMLIB_ERR_* consts.
+def get_error_string(error_num):
+    return _backend.ffi.string(_backend.lib.wimlib_get_error_string(error_num))
 
-                :returns: string containing error message
-                :raise ValueError: when WIMLIB_ERR_* is invalid and overflowes.
-                """
-                try:
-                        return _backend.ffi.string(_backend.lib.wimlib_get_error_string(errno))
-                except OverflowError:
-                        raise ValueError("Invalid WIMLIB_ERR_* number, Please use WIMError constants.")
+def set_error_printing(self, state):
+    ret = _backend.lib.wimlib_set_print_errors(bool(state))
+    if ret:
+        raise WIMError(ret)
 
-get_error_string = WIMError.get_error_string
+def set_error_file_by_name(self, file_path):
+    ret = _backend.lib.wimlib_set_error_file_by_name(file_path)
+    if ret:
+        raise WIMError(ret)
 
-
-def set_error_printing(state):
-        """ Enable/Disable error and warining printing to console."""
-        ret = _backend.lib.wimlib_set_print_errors(bool(state))
-        if ret:
-                raise WIMError(ret)
-
-
-def set_error_file_name(file_path):
-        """ Enable error/warning logging to specified file path."""
-        ret = _backend.lib.wimlib_set_error_file_by_name(file_path)
-        if ret:
-                raise WIMError(ret)
-
-
-def set_error_file_handle(file_handle):
-        """ Enable error/warning logging to specified FILE object"""
-        raise NotImplementedError("This function is not implemented. Try setErrorFileName to log errors.")
+def set_error_file_by_handle(self, file):
+    raise NotImplementedError("Error: wimlib functions with FILE* argument not supported yet")
