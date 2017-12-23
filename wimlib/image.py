@@ -1,3 +1,5 @@
+from wimlib import _backend 
+
 class ImageCollection(object):
     """
     This class represents a collection of images inside a WIM file.
@@ -27,7 +29,7 @@ class ImageCollection(object):
 
     def add_empty(self, name=""):
         """ Add an empty image """
-        ret = _backend.lib._wimlib_add_empty_image(self._wim_struct, name, _backend.ffi.NULL)
+        ret = _backend.lib.wimlib_add_empty_image(self._wim_struct, name, _backend.ffi.NULL)
         if ret:
             raise WIMError(ret)
         return self.refresh(True)

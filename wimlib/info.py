@@ -19,7 +19,7 @@ class Info(object):
 
     @property
     def boot_index(self):
-        return self._wim_struct.boot_index
+        return self._info_struct.boot_index
 
     @boot_index.setter
     def boot_index(self, value):

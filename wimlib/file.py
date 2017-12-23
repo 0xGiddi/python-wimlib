@@ -1,4 +1,5 @@
-from wimlib import _backend, WIMError, WIMInfo, ALL_IMAGES
+from wimlib import _backend, WIMError, Info, ALL_IMAGES
+from wimlib.image import ImageCollection
 from datetime import timedelta, datetime
 
 
