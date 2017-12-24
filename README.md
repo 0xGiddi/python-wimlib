@@ -1,6 +1,6 @@
 
 >This repo and project is still an early WIP.
->Be advised that not all functionality has been erapped yet and errors and exceptions are to be expected until fully tested.
+>Be advised that not all functionality has been wrapped yet and errors and exceptions are to be expected until fully tested.
 >
 >Found a bug? Please, open up an issue in the [issue tracker](https://github.com/0xGiddi/python-wimlib/issues)
 
@@ -17,20 +17,20 @@ You can find some examples using his module in the `/examples ` directory. More 
 - Easy structure and neat layout for easy OOP approach.
 
 ### Implemented wimlib modules
-- Global init/cleanup funcions
+- Global init/cleanup functions
 - Error logging/printing functions
 - Compression and Decompression functions
 - Creating and opening WIMs (function w/ progress are a WIP)
-- Retrieving WIM and Image infomation
+- Retrieving WIM and Image information
 - Mounting WIMs - Implemented but seems to crash python :(
 - Writing and overwriting WIMs
 
 ### Contributing
-If you would like to help this project out, you can! There are sevral ways to help python-wimlib:
+If you would like to help out this project, you can! There are several ways to help python-wimlib:
 - Just use the module, the more it's used the more the urge to maintain it.
-- Report bugs and request features, reporting bugs can be doene via Githubs [Issue tracker](https://github.com/0xGiddi/python-wimlib/issues)
+- Report bugs and request features, reporting bugs can be done via Github's [Issue tracker](https://github.com/0xGiddi/python-wimlib/issues)
 - Review the code, don't like what you see? Comment on the code via Github.
-- Pull requests, pull requests are welcome, but please dont make drastic changes without consulting the owner first.
+- Pull requests, pull requests are welcome, but please don't make drastic changes without consulting the owner first.
 
 ### License
 python-wimlib (this project) and the [wimlib](https://wimlib.net) library are licensed under the [GNU General Public
