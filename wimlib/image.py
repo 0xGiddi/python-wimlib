@@ -1,4 +1,4 @@
-from wimlib import _backend 
+from wimlib import _backend, WIMError
 
 class ImageCollection(object):
     """
@@ -111,12 +111,12 @@ class Image(object):
             raise WIMError(ret)
 
     @property
-    def descripion(self):
+    def description(self):
         """ Get the description of the image """
         value = _backend.lib.wimlib_get_image_description(self._wim_struct, self.index)
         return _backend.ffi.string(value) if value else ""
 
-    @descripion.setter
+    @description.setter
     def description(self, value):
         """ Set the description of the image """
         ret = _backend.lib.wimlib_set_image_descripton(self._wim_struct, self.index, value)

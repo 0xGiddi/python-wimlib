@@ -1,5 +1,4 @@
-from wimlib import _backend
-from wimlib import WIMError
+from wimlib import _backend, WIMError
 
 COMPRESSOR_FLAG_DESTRUCTIVE = 0x80000000
 COMPRESSION_TYPE_NONE = 0
@@ -37,7 +36,7 @@ class Compressor(object):
         if not ret:
             raise ValueError("Error: compression type or block size are incorrect")
 
-class decompressor(object):
+class Decompressor(object):
     def __init__(self, compression_type, block_size, dont_create=False):
         self.compression_type = compression_type
         self.block_size = block_size
@@ -50,7 +49,7 @@ class decompressor(object):
             _backend.lib.wimlib_free_decompressor(self._decompressor)
 
     def create(self):
-        decompressor = _backend.ffi.new("struct wimlib_decompress**")
+        decompressor = _backend.ffi.new("struct wimlib_decompressor**")
         ret = _backend.lib.wimlib_create_decompressor(self.compression_type, self.block_size, decompressor)
         if ret:
             raise WIMError(ret)
@@ -60,7 +59,7 @@ class decompressor(object):
         out_buffer = _backend.ffi.new("unsigned char[{0}]".format(original_size))
         ret = _backend.lib.wimlib_decompress(data, len(data), out_buffer, original_size, self._decompressor)
         if ret:
-            raise WIMError(ret)
+            raise WIMError("wimlib_decompress returned {0}.".format(ret))
         return bytes(_backend.ffi.buffer(out_buffer, original_size))
 
 def set_default_compression_level(compression_type, level):

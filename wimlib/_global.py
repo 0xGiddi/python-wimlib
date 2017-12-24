@@ -1,5 +1,4 @@
-from wimlib import _backend
-from .error import WIMError
+from wimlib import _backend, WIMError
 
 # Init flags for wimlib_global_init
 INIT_FLAG_DONT_ACQUIRE_PRIVILEGES = 0x00000002  # Windows only

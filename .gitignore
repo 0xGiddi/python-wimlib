@@ -1,2 +1,6 @@
 temp/
 *.pyc
+build/
+debug
+dist/
+pywimlib.egg-info/

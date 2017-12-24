@@ -1,6 +1,6 @@
-from wimlib import _backend, WIMError, Info, ALL_IMAGES
-from wimlib.image import ImageCollection
-from datetime import timedelta, datetime
+import wimlib
+from wimlib import _backend, WIMError
+#from datetime import timedelta, datetime
 
 
 class WIMFile(object):
@@ -14,7 +14,7 @@ class WIMFile(object):
                 self._wim_struct = self._open(path, flags)
             else:
                 self._wim_struct = self._open_with_progress(path, flags, callback, context)
-        self.images = ImageCollection(self)
+        self.images = wimlib.image.ImageCollection(self)
 
     def __del__(self):
         _backend.lib.wimlib_free(self._wim_struct)
@@ -81,11 +81,11 @@ class WIMFile(object):
         ret = _backend.lib.wimlib_get_wim_info(self._wim_struct, info)
         if ret:
             raise WIMError(ret)
-        return Info(info)
+        return wimlib.info.Info(info)
 
     @info.setter
     def info(self, value):
-        if not isinstance(value, Info):
+        if not isinstance(value, wimlib.info.Info):
             raise ValueError("Error: property info sould be set to type of Info().")
         ret = _backend.lib.wimlib_set_wim_info(self._wim_struct, value._info_struct)
         if ret:

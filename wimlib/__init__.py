@@ -7,13 +7,11 @@ _backend = _WIMBackend()
 ENCODING = _backend.encoding
 
 from wimlib.error import WIMError
+import wimlib.compression as compression
+import wimlib.info as info
+import wimlib.image as image
+import wimlib.file as file
 from wimlib._global import *
-import wimlib.compression
-#import wimlib.progress
-from wimlib.info import *
-from wimlib.image import *
-from wimlib.file import *
-# from .file import WIMFile, WIMInfo
-# from .image import WIMImage
+
 
 _atexit.register(global_cleanup)
