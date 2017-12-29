@@ -231,3 +231,130 @@ class Image(object):
         """ Export the image to a diffrent WIM file """
         raise NotImplementedError()
 
+
+class DirEntry(object):
+    def __init__(self, entry):
+        self._dentry = entry
+
+    @property
+    def filename(self):
+        if self._entry.filename != _backend.ffi.NULL:
+            return _backend.ffi.string(self._entry.filename)
+        return ''
+
+    @property
+    def dos_name(self):
+        if self._entry.dos_name != _backend.ffi.NULL:
+            return _backend.ffi.string(self._entry.dos_name)
+        return ''
+
+    @property
+    def full_path(self):
+        if self._entry.full_path != _backend.ffi.NULL:
+            return _backend.ffi.string(self._entry.full_path)
+        return ''
+    
+    @property
+    def depth(self):
+        return self._dentry.depth
+
+    @property
+    def security_descriptor(self):
+        # TODO: Add attibutes struct and check for null
+        return self._dentry.security_descriptor
+
+    @property
+    def security_descriptor_size(self):
+        # TODO: Size for above attributes
+        return self._dentry.security_descriptor_size
+
+    @property
+    def attributes(self):
+        return self._dentry.attributes
+
+    @property
+    def reparse_tag(self):
+        return self._dentry.reparse_tag
+
+    @property
+    def num_links(self):
+        return self._dentry.num_links
+
+    @property
+    def num_named_streams(self):
+        return self._dentry.num_named_streams
+
+    @property
+    def hard_link_group_id(self):
+        return self._dentry.hard_link_group_id
+
+    @property
+    def creation_time(self):
+        # TODO: Check architecture and decide if to add the high 32 bits
+        return datetime.fromtimestamp(self._dentry.creation_time.tv_sec) + timedelta(microseconds=self._dentry.creation_time.tv_nsec//1000)
+
+    @property
+    def last_write_time(self):
+        # TODO: Check architecture and decide if to add the high 32 bits
+        return datetime.fromtimestamp(self._dentry.last_write_time.tv_sec) + timedelta(microseconds=self._dentry.last_write_time.tv_nsec//1000)
+
+    @property
+    def last_access_time(self):
+        # TODO: Check architecture and decide if to add the high 32 bits
+        return datetime.fromtimestamp(self._dentry.last_access_time.tv_sec) + timedelta(microseconds=self._dentry.last_access_time.tv_nsec//1000)
+
+    @property
+    def unix_uid(self):
+        return self._dentry.unix_uid
+
+    @property
+    def unix_gid(self):
+        return self._dentry.unix_gid
+
+    @property
+    def unix_mode(self):
+        return self._dentry.unix_mode
+
+    @property
+    def unix_rdev(self):
+        return self._dentry.unix_rdev
+
+    @property
+    def object_id(self):
+        return self._dentry.object_id
+
+    @property
+    def _creation_time_high(self):
+        return self._dentry.creation_time_high
+
+    @property
+    def _last_write_time_high(self):
+        return self._dentry.last_write_time_high
+
+    @property
+    def _last_access_time_high(self):
+        return self._dentry.last_access_time_high
+
+    @property
+    def streams(self):
+        return self._dentry.streams
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
