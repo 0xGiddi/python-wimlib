@@ -1,7 +1,4 @@
-
->This repo and project is still an early WIP.
->Be advised that not all functionality has been wrapped yet and errors and exceptions are to be expected until fully tested.
->
+> This is still somewhat a WIP, but has not yet been fully tested
 >Found a bug? Please, open up an issue in the [issue tracker](https://github.com/0xGiddi/python-wimlib/issues)
 
 ## Wimlib python wrapper 
@@ -22,7 +19,7 @@ You can find some examples using his module in the `/examples ` directory. More 
 - Compression and Decompression functions
 - Creating and opening WIMs (function w/ progress are a WIP)
 - Retrieving WIM and Image information
-- Mounting WIMs - Implemented but seems to crash python :(
+- Mounting WIMs (fuse seems to exit the python process, you can mount with debug flag in a seprate hread to bypass this)
 - Writing and overwriting WIMs
 
 ### Contributing

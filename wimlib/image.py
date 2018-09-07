@@ -1,4 +1,5 @@
 from wimlib import _backend, WIMError
+from datetime import datetime, timedelta
 
 class ImageCollection(object):
     """
@@ -193,8 +194,9 @@ class Image(object):
         @_backend.ffi.callback("int(struct wimlib_dir_entry*, void*)")
         def callback_wrapper(dir_entry, user_context):
             user_context = _backend.ffi.from_handle(user_context)
+            py_dentry = DirEntry(dir_entry)
             # TODO: Cast dir_entry into a more pythonic object instead of C struct.
-            ret_val = callback(dir_entry, user_context)
+            ret_val = callback(py_dentry, user_context)
             return ret_val if ret_val is not None else 0
         context = _backend.ffi.new_handle(context)
         ret = _backend.lib.wimlib_iterate_dir_tree(self._wim_struct, self.index, path, flags, callback_wrapper, context)
@@ -238,20 +240,20 @@ class DirEntry(object):
 
     @property
     def filename(self):
-        if self._entry.filename != _backend.ffi.NULL:
-            return _backend.ffi.string(self._entry.filename)
+        if self._dentry.filename != _backend.ffi.NULL:
+            return _backend.ffi.string(self._dentry.filename)
         return ''
 
     @property
     def dos_name(self):
-        if self._entry.dos_name != _backend.ffi.NULL:
-            return _backend.ffi.string(self._entry.dos_name)
+        if self._dentry.dos_name != _backend.ffi.NULL:
+            return _backend.ffi.string(self._dentry.dos_name)
         return ''
 
     @property
     def full_path(self):
-        if self._entry.full_path != _backend.ffi.NULL:
-            return _backend.ffi.string(self._entry.full_path)
+        if self._dentry.full_path != _backend.ffi.NULL:
+            return _backend.ffi.string(self._dentry.full_path)
         return ''
     
     @property
