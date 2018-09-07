@@ -15,7 +15,7 @@ class Info(object):
 
     @property
     def compression_type(self):
-        return (self._info_struct.compression_type, compression.get_type_string(self._info_struct.compression_type))
+        return (self._info_struct.compression_type, compression.get_compression_type_string(self._info_struct.compression_type))
 
     @property
     def boot_index(self):

@@ -1,5 +1,5 @@
 import wimlib
-from wimlib import _backend, WIMError
+from wimlib import _backend, WIMError, _global
 #from datetime import timedelta, datetime
 
 
@@ -9,11 +9,13 @@ class WIMFile(object):
         self.path = path
         if not self.path:
             self._wim_struct = self._create_new(compression)
+            self._has_baking_file = False
         else:
             if not callback:
                 self._wim_struct = self._open(path, flags)
             else:
                 self._wim_struct = self._open_with_progress(path, flags, callback, context)
+            self._has_baking_file = True
         self.images = wimlib.image.ImageCollection(self)
 
     def __del__(self):
@@ -48,17 +50,32 @@ class WIMFile(object):
             raise WIMError(ret)
         return wim_struct[0]
 
-    def write(self):
-        raise NotImplementedError()
+    def write(self, fd=None, image=_global.ALL_IMAGES, write_flags=None, threads=4):
+        if self.path is None:
+            raise WIMError("self.path is None, no file to write to.")
 
-    def _write(self):
-        raise NotImplementedError()
+        path = _backend.ffi.new("char[]", self.path)
+        write_flags = write_flags if write_flags is not None else 0
 
-    def _overwrite(self):
-        raise NotImplementedError()
-
-    def _write_to_fd(self):
-        raise NotImplementedError()
+        if not self._has_baking_file:
+            if fd:
+                ret = _backend.lib.wimlib_write_to_fd(self._wim_struct, fd.fileno(), image, write_flags, threads)
+            else:
+                ret = _backend.lib.wimlib_write(self._wim_struct, path, image, write_flags, threads)
+        else:
+            ret = _backend.lib.wimlib_overwrite(self._wim_struct, write_flags, threads)
+        
+        if ret:
+            raise WIMError(ret)
+            
+    #def _write(self):
+    #    raise NotImplementedError()
+    #
+    #def _overwrite(self):
+    #    raise NotImplementedError()
+    #
+    #def _write_to_fd(self):
+    #    raise NotImplementedError()
 
     def reference_resources(self, resource, ref_flags, wim_flags):
         """ Reference sources in other WIMs """

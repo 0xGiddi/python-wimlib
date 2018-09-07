@@ -229,9 +229,17 @@ class Image(object):
         if ret:
             raise WIMError(ret)
 
-    def export_image(self, target_wim, target_name, target_desciption, flags):
+    def export_image(self, target_wim, target_name=None, target_description=None, flags=None):
         """ Export the image to a diffrent WIM file """
-        raise NotImplementedError()
+        target_name = target_name if target_name is not None else self.name
+        flags = flags if flags is not None else 0
+        target_description = target_description if target_description is not None else self.description
+        ret = _backend.lib.wimlib_export_image(self._wim_struct, self.index, target_wim._wim_struct, \
+                _backend.ffi.new("char[]", target_name), _backend.ffi.new("char[]", target_description), flags)
+        if ret:
+            raise WIMError(ret)
+        self._wim_obj.images.refresh()
+            
 
 
 class DirEntry(object):
